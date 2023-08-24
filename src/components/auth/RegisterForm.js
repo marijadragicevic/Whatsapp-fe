@@ -1,13 +1,18 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useDispatch, useSelector } from "react-redux";
 import { PulseLoader } from "react-spinners";
 import { signUpSchema } from "../../utils/validation";
-import { registerUser } from "../../features/UserSlice";
+import { changeStatus, registerUser } from "../../features/UserSlice";
 import AuthInput from "./AuthInput";
 import Picture from "./Picture";
+
+//variables
+const cloudName = process.env.REACT_APP_CLOUD_NAME;
+const cloudSecret = process.env.REACT_APP_CLOUD_SECRET;
 
 const RegisterForm = () => {
   const dispatch = useDispatch();
@@ -26,21 +31,38 @@ const RegisterForm = () => {
   } = useForm({ resolver: yupResolver(signUpSchema) });
 
   const onSubmit = async (data) => {
-    let response = await dispatch(registerUser({ ...data, picture: "" }));
+    let imageURL = "";
+    // upload image to cloudinary and then register user
+    if (picture) {
+      dispatch(changeStatus("loading"));
+      const imageData = await uploadImage();
+      imageURL = imageData?.secure_url;
+    }
 
-    console.log(response);
+    let response = await dispatch(registerUser({ ...data, picture: imageURL }));
+
     // status is not updating properly
     if (response.payload.user) {
       navigate("/");
     }
   };
 
+  const uploadImage = async () => {
+    let formData = new FormData();
+    formData.append("upload_preset", cloudSecret);
+    formData.append("file", picture);
+    const { data } = await axios.post(
+      `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+      formData
+    );
+
+    return data;
+  };
+
   const handlePictureChange = (picture, readablePicture) => {
     setPicture(picture);
     setReadablePicture(readablePicture);
   };
-
-  console.log(picture, readablePicture);
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center">
