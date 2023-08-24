@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -6,13 +7,16 @@ import { PulseLoader } from "react-spinners";
 import { signUpSchema } from "../../utils/validation";
 import { registerUser } from "../../features/UserSlice";
 import AuthInput from "./AuthInput";
-import { useCallback } from "react";
+import Picture from "./Picture";
 
 const RegisterForm = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const { status, error } = useSelector((state) => state.user);
 
-  const navigate = useNavigate();
+  const [picture, setPicture] = useState("");
+  const [readablePicture, setReadablePicture] = useState("");
 
   const {
     register,
@@ -31,10 +35,17 @@ const RegisterForm = () => {
     }
   };
 
+  const handlePictureChange = (picture, readablePicture) => {
+    setPicture(picture);
+    setReadablePicture(readablePicture);
+  };
+
+  console.log(picture, readablePicture);
+
   return (
-    <div className="h-screen w-full flex items-center justify-center">
+    <div className="min-h-screen w-full flex items-center justify-center">
       {/* Container */}
-      <div className="w-full space-y-8 p-10 dark:bg-dark_bg_2 rounded-xl">
+      <div className="w-full max-w-md space-y-8 p-10 dark:bg-dark_bg_2 rounded-xl">
         {/* Heading */}
         <div className="text-center dark:text-dark_text_1">
           <h2 className="mt-6 text-3xl font-bold">Welcome!</h2>
@@ -44,19 +55,22 @@ const RegisterForm = () => {
         <form className="mt-6 space-y-6" onSubmit={handleSubmit(onSubmit)}>
           <AuthInput
             name="name"
+            type="text"
             placeholder="Name"
             register={register}
             error={errors?.name?.message}
           />
           <AuthInput
             name="email"
+            type="text"
             placeholder="Email address"
             register={register}
             error={errors?.email?.message}
           />
           <AuthInput
             name="status"
-            placeholder="Status"
+            type="text"
+            placeholder="Status(Optional)"
             register={register}
             error={errors?.status?.message}
           />
@@ -67,6 +81,17 @@ const RegisterForm = () => {
             register={register}
             error={errors?.password?.message}
           />
+          {/* Picture */}
+          <Picture
+            readablePicture={readablePicture}
+            onPictureChange={handlePictureChange}
+          />
+          {/* if we have an error */}
+          {error && (
+            <div>
+              <p className="text-red-400">{error}</p>
+            </div>
+          )}
           {/* Submit button */}
           <button
             type="submit"
@@ -78,12 +103,6 @@ const RegisterForm = () => {
               "Sign up"
             )}
           </button>
-          {/* if we have an error */}
-          {error && (
-            <div>
-              <p className="text-red-400">{error}</p>
-            </div>
-          )}
           {/* Sign in link */}
           <p className="flex flex-col justify-center mt-10 text-center text-md dark:text-dark_text_1">
             <span>Have an account ?</span>
