@@ -1,13 +1,18 @@
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { PulseLoader } from "react-spinners";
 import { signUpSchema } from "../../utils/validation";
+import { registerUser } from "../../features/UserSlice";
 import AuthInput from "./AuthInput";
-import { Link } from "react-router-dom";
+import { useCallback } from "react";
 
 const RegisterForm = () => {
-  const { status } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const { status, error } = useSelector((state) => state.user);
+
+  const navigate = useNavigate();
 
   const {
     register,
@@ -15,10 +20,16 @@ const RegisterForm = () => {
     watch,
     formState: { errors },
   } = useForm({ resolver: yupResolver(signUpSchema) });
-  const onSubmit = (data) => console.log(data);
 
-  console.log("values", watch());
-  console.log("errors", errors);
+  const onSubmit = async (data) => {
+    let response = await dispatch(registerUser({ ...data, picture: "" }));
+
+    console.log(response);
+    // status is not updating properly
+    if (response.payload.user) {
+      navigate("/");
+    }
+  };
 
   return (
     <div className="h-screen w-full flex items-center justify-center">
@@ -67,6 +78,12 @@ const RegisterForm = () => {
               "Sign up"
             )}
           </button>
+          {/* if we have an error */}
+          {error && (
+            <div>
+              <p className="text-red-400">{error}</p>
+            </div>
+          )}
           {/* Sign in link */}
           <p className="flex flex-col justify-center mt-10 text-center text-md dark:text-dark_text_1">
             <span>Have an account ?</span>
