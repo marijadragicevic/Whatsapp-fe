@@ -13,8 +13,6 @@ const App = () => {
   const { user } = useSelector((state) => state.user);
   const { access_token } = user;
 
-  console.log(user);
-
   return (
     <div className="dark">
       <Router>
