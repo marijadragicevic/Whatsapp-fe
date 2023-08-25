@@ -3,7 +3,7 @@ import { ArrowIcon, CloseIcon, NotificationIcon } from "../../../svg";
 const Notifications = () => {
   return (
     <div className="h-[90px] dark:bg-dark_bg_3 flex items-center p-[13px]">
-      {/* container */}
+      {/* Container */}
       <div className="w-full flex items-center justify-between">
         {/* left side*/}
         <div className="flex items-center gap-x-4">
@@ -18,7 +18,7 @@ const Notifications = () => {
             </span>
           </div>
         </div>
-        {/* right side */}
+        {/* Right side */}
         <div className="cursor-pointer">
           <CloseIcon className="dark:fill-dark_svg_2" />
         </div>

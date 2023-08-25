@@ -6,9 +6,9 @@ const SidebarHeader = () => {
 
   return (
     <div className="h-[50px] dark:bg-dark_bg_2 flex items-center p16">
-      {/* container */}
+      {/* Container */}
       <div className="w-full flex items-center justify-between">
-        {/* user image */}
+        {/* User image */}
         <button className="btn">
           <img
             src={user.picture}
@@ -16,7 +16,7 @@ const SidebarHeader = () => {
             className="w-full h-full rounded-full object-cover"
           />
         </button>
-        {/* user icons */}
+        {/* User icons */}
         <ul className="flex items-center gap-x-2.5">
           <li>
             <button className="btn">
