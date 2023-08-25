@@ -14,4 +14,17 @@
   .p16 {
     @apply px-[16px];
   }
+
+  .textPrimary {
+    font-size: 16px;
+    line-height: 21px;
+
+    @apply text-dark_text_1;
+  }
+  .textSecondary {
+    font-size: 14px;
+    line-height: 19px;
+
+    @apply text-dark_text_2;
+  }
 }
