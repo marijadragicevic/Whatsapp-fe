@@ -11,7 +11,7 @@ import Register from "./pages/Register";
 
 const App = () => {
   const { user } = useSelector((state) => state.user);
-  const { access_token } = user;
+  const { token } = user;
 
   return (
     <div className="dark">
@@ -19,15 +19,18 @@ const App = () => {
         <Routes>
           <Route
             path="/"
-            element={access_token ? <Home /> : <Navigate to="/login" />}
+            element={<Home />}
+            // element={access_token ? <Home /> : <Navigate to="/login" />}
           />
           <Route
+            element={<Login />}
             path="/login"
-            element={access_token ? <Navigate to="/" /> : <Login />}
+            // element={access_token ? <Navigate to="/" /> : <Login />}
           />
           <Route
             path="/register"
-            element={access_token ? <Navigate to="/" /> : <Register />}
+            element={<Register />}
+            // element={access_token ? <Navigate to="/" /> : <Register />}
           />
         </Routes>
       </Router>
