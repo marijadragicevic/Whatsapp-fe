@@ -34,7 +34,8 @@
 
   .convos {
     height: calc(100vh-220px);
-    overflow-y: scroll;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 }
 
