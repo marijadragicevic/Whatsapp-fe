@@ -1,6 +1,24 @@
+import { useDispatch, useSelector } from "react-redux";
+import { openOrCreateConversation } from "../../../features/ChatSlice";
+
 const Contact = ({ contact }) => {
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.user);
+
+  const values = {
+    receiverId: contact?._id,
+    token: user?.token,
+  };
+
+  const openConversation = () => {
+    dispatch(openOrCreateConversation(values));
+  };
+
   return (
-    <li className="list-none h-[72px] w-full dark:bg-dark_bg_1 hover:dark:bg-dark_bg_2 transition ease-in duration-200 cursor-pointer dark:text-dark_text_1 px-[10px]">
+    <li
+      onClick={openConversation}
+      className="list-none h-[72px] w-full dark:bg-dark_bg_1 hover:dark:bg-dark_bg_2 transition ease-in duration-200 cursor-pointer dark:text-dark_text_1 px-[10px]"
+    >
       {/* Container */}
       <div className="relative w-full flex items-center justify-between py-[10px]">
         {/* Left */}

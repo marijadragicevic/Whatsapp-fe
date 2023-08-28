@@ -8,7 +8,7 @@ const Home = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
   const { activeConversation } = useSelector((state) => state.chat);
-
+  console.log(activeConversation, "<---- activeConversation");
   // get conversations
   useEffect(() => {
     if (user?.token) {

@@ -1,8 +1,26 @@
+import { useDispatch, useSelector } from "react-redux";
 import { dateHandler } from "../../../utils/date";
+import { openOrCreateConversation } from "../../../features/ChatSlice";
+import { getConversationId } from "../../../utils/chat";
 
 const Conversation = ({ conversation }) => {
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.user);
+
+  const values = {
+    receiverId: getConversationId(user, conversation?.users),
+    token: user?.token,
+  };
+
+  const openConversation = () => {
+    dispatch(openOrCreateConversation(values));
+  };
+
   return (
-    <li className="list-none h-[72px] w-full dark:bg-dark_bg_1 hover:dark:bg-dark_bg_2 transition ease-in duration-200 cursor-pointer dark:text-dark_text_1 px-[10px]">
+    <li
+      onClick={openConversation}
+      className="list-none h-[72px] w-full dark:bg-dark_bg_1 hover:dark:bg-dark_bg_2 transition ease-in duration-200 cursor-pointer dark:text-dark_text_1 px-[10px]"
+    >
       {/* Container */}
       <div className="relative w-full flex items-center justify-between py-[10px]">
         {/* Left */}
