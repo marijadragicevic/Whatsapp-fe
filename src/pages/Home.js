@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getConversations } from "../features/ChatSlice";
 import { Sidebar } from "../components/sidebar";
-import { WhatsAppHome } from "../components/chat";
+import { ChatPanel, WhatsAppHome } from "../components/chat";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -23,7 +23,7 @@ const Home = () => {
         {/* Sidebar */}
         <Sidebar />
         {activeConversation && Object.keys(activeConversation)?.length > 0 ? (
-          "home"
+          <ChatPanel />
         ) : (
           <WhatsAppHome />
         )}

@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { openOrCreateConversation } from "../../../features/ChatSlice";
+import { capitalize } from "../../../utils/string";
 
 const Contact = ({ contact }) => {
   const dispatch = useDispatch();
@@ -35,7 +36,7 @@ const Contact = ({ contact }) => {
           <div className="w-full flex flex-col">
             {/* Contact name */}
             <h1 className="font-bold flex items-center gap-x-2">
-              {contact?.name}
+              {capitalize(contact?.name)}
             </h1>
             {/* Contact message */}
             <div>
