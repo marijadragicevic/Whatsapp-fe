@@ -73,7 +73,7 @@ const LoginForm = () => {
             <span>You do not have an account ?</span>
             <Link
               to="/register"
-              className="hover:underline transition ease-in dura300"
+              className="hover:underline transition ease-in duration-300"
             >
               Sign up
             </Link>

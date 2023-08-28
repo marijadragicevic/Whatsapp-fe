@@ -130,7 +130,7 @@ const RegisterForm = () => {
             <span>Have an account ?</span>
             <Link
               to="/login"
-              className="hover:underline transition ease-in dura300"
+              className="hover:underline transition ease-in duration-300"
             >
               Sign in
             </Link>
