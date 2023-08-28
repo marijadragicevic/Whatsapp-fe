@@ -23,7 +23,6 @@ const Search = ({ searchLength, setSearchResults }) => {
             },
           }
         );
-        console.log(data);
         setSearchResults(data);
       } catch (error) {
         console.log(error.response.data.error.message);

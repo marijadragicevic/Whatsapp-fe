@@ -50,7 +50,7 @@ export const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    logout: (state, action) => {
+    logout: (state) => {
       state.status = "";
       state.error = "";
       state.user = {

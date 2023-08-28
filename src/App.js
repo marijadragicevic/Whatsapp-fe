@@ -19,18 +19,15 @@ const App = () => {
         <Routes>
           <Route
             path="/"
-            element={<Home />}
-            // element={access_token ? <Home /> : <Navigate to="/login" />}
+            element={token ? <Home /> : <Navigate to="/login" />}
           />
           <Route
-            element={<Login />}
             path="/login"
-            // element={access_token ? <Navigate to="/" /> : <Login />}
+            element={token ? <Navigate to="/" /> : <Login />}
           />
           <Route
             path="/register"
-            element={<Register />}
-            // element={access_token ? <Navigate to="/" /> : <Register />}
+            element={token ? <Navigate to="/" /> : <Register />}
           />
         </Routes>
       </Router>
