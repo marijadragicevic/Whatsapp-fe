@@ -2,11 +2,13 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const CONVERSATION_ENDPOINT = `${process.env.REACT_APP_API_ENDPOINT}/conversation`;
+const MESSAGE_ENDPOINT = `${process.env.REACT_APP_API_ENDPOINT}/message`;
 
 const initialState = {
   status: "",
   error: "",
   conversations: [],
+  messages: [],
   activeConversation: {},
   notifications: [],
 };
@@ -46,6 +48,25 @@ export const openOrCreateConversation = createAsyncThunk(
   }
 );
 
+export const getConversationMessages = createAsyncThunk(
+  "conversation/message",
+  async (values, { rejectWithValue }) => {
+    try {
+      const { token, conversationId } = values;
+
+      const { data } = await axios.get(
+        `${MESSAGE_ENDPOINT}/${conversationId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data.error.message);
+    }
+  }
+);
+
 export const chatSlice = createSlice({
   name: "chat",
   initialState,
@@ -56,7 +77,7 @@ export const chatSlice = createSlice({
   },
   extraReducers(builder) {
     builder
-      .addCase(getConversations.pending, (state, action) => {
+      .addCase(getConversations.pending, (state) => {
         state.status = "loading";
       })
       .addCase(getConversations.fulfilled, (state, action) => {
@@ -68,7 +89,7 @@ export const chatSlice = createSlice({
         state.status = "failed";
         state.error = action.payload;
       })
-      .addCase(openOrCreateConversation.pending, (state, action) => {
+      .addCase(openOrCreateConversation.pending, (state) => {
         state.status = "loading";
       })
       .addCase(openOrCreateConversation.fulfilled, (state, action) => {
@@ -77,6 +98,18 @@ export const chatSlice = createSlice({
         state.activeConversation = action.payload;
       })
       .addCase(openOrCreateConversation.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
+      .addCase(getConversationMessages.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(getConversationMessages.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.error = "";
+        state.messages = action.payload;
+      })
+      .addCase(getConversationMessages.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       });

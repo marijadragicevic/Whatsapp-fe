@@ -33,9 +33,15 @@
   }
 
   .convos {
-    height: calc(100vh-220px);
+    height: calc(100vh - 220px);
     overflow-y: auto;
     overflow-x: hidden;
+  }
+
+  .overflow_scrollbar {
+    height: calc(100vh - 155px);
+    overflow-x: hidden;
+    overflow-y: auto;
   }
 }
 
