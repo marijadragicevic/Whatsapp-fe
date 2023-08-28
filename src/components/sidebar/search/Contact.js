@@ -41,7 +41,11 @@ const Contact = ({ contact }) => {
             <div>
               <div className="flex items-center gap-x-1 dark:text-dark_text_2">
                 <div className="flex-1 items-center gap-x-1 dark:text-dark_text_2">
-                  <p>{contact?.status}</p>
+                  <p>
+                    {contact?.status?.length > 25
+                      ? `${contact.status.substring(0, 25)}...`
+                      : contact.status}
+                  </p>
                 </div>
               </div>
             </div>
