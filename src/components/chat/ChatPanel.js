@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import ChatHeader from "./header/ChatHeader";
 import ChatMessages from "./messages/ChatMessages";
 import { getConversationMessages } from "../../features/ChatSlice";
+import ChatActions from "./actions/ChatActions";
 
 const ChatPanel = () => {
   const dispatch = useDispatch();
@@ -28,6 +29,8 @@ const ChatPanel = () => {
         <ChatHeader />
         {/* Chat messages */}
         <ChatMessages />
+        {/* Chat actions */}
+        <ChatActions />
       </div>
     </div>
   );
