@@ -5,7 +5,12 @@ import { Search } from "./search";
 import { Conversations } from "./conversations";
 
 const Sidebar = () => {
-  const [searchResults, setSetSearchResults] = useState([]);
+  const [searchResults, setSearchResults] = useState([]);
+
+  const handleSearchResults = (results) => {
+    setSearchResults(results);
+  };
+
   return (
     <div className="w-[40%] h-full select-none">
       {/* Sidebar header */}
@@ -13,7 +18,10 @@ const Sidebar = () => {
       {/* Notifications */}
       <Notifications />
       {/* Search */}
-      <Search searchLength={searchResults?.length} />
+      <Search
+        searchLength={searchResults?.length}
+        setSearchResults={handleSearchResults}
+      />
       {/* Conversations list */}
       <Conversations />
     </div>
