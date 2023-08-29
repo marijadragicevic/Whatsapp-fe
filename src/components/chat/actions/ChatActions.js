@@ -8,11 +8,13 @@ import EmojiPickerPanel from "./EmojiPickerPanel";
 import { Attachments } from "./attachments";
 
 const ChatActions = () => {
+  const textRef = useRef();
   const dispatch = useDispatch();
+
   const [message, setMessage] = useState("");
   const [showPicker, setShowPicker] = useState(false);
   const [showAttachments, setShowAttachments] = useState(false);
-  const textRef = useRef();
+  const [loading, setLoading] = useState(false);
 
   const { user } = useSelector((state) => state.user);
   const { activeConversation, status } = useSelector((state) => state.chat);
@@ -28,16 +30,17 @@ const ChatActions = () => {
     setMessage(newMessage);
   };
 
-  const sendMessageHandler = (event) => {
+  const sendMessageHandler = async (event) => {
     event.preventDefault();
-
+    setLoading(true);
     const isMessageEmpty = !message?.trim();
 
     if (!isMessageEmpty) {
-      dispatch(sendMessage(values));
       setMessage("");
       setShowPicker(false);
+      await dispatch(sendMessage(values));
     }
+    setLoading(false);
   };
 
   return (
@@ -71,7 +74,7 @@ const ChatActions = () => {
         />
         {/* Send button */}
         <button className="btn" type="submit">
-          {status === "loading" ? (
+          {status === "loading" && loading ? (
             <ClipLoader color="#e9edef" size={25} />
           ) : (
             <SendIcon className="dark:fill-dark_svg_1" />
