@@ -5,9 +5,14 @@ import {
   Navigate,
 } from "react-router-dom";
 import { useSelector } from "react-redux";
-import Home from "./pages/Home";
+import { io } from "socket.io-client";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import SocketContext from "./context/SocketContext";
+import HomeWithSocket from "./pages/Home";
+
+// Socket io
+const socket = io(process.env.REACT_APP_SERVER_ENDPOINT);
 
 const App = () => {
   const { user } = useSelector((state) => state.user);
@@ -15,22 +20,24 @@ const App = () => {
 
   return (
     <div className="dark">
-      <Router>
-        <Routes>
-          <Route
-            path="/"
-            element={token ? <Home /> : <Navigate to="/login" />}
-          />
-          <Route
-            path="/login"
-            element={token ? <Navigate to="/" /> : <Login />}
-          />
-          <Route
-            path="/register"
-            element={token ? <Navigate to="/" /> : <Register />}
-          />
-        </Routes>
-      </Router>
+      <SocketContext.Provider value={socket}>
+        <Router>
+          <Routes>
+            <Route
+              path="/"
+              element={token ? <HomeWithSocket /> : <Navigate to="/login" />}
+            />
+            <Route
+              path="/login"
+              element={token ? <Navigate to="/" /> : <Login />}
+            />
+            <Route
+              path="/register"
+              element={token ? <Navigate to="/" /> : <Register />}
+            />
+          </Routes>
+        </Router>
+      </SocketContext.Provider>
     </div>
   );
 };

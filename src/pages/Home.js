@@ -3,11 +3,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { getConversations } from "../features/ChatSlice";
 import { Sidebar } from "../components/sidebar";
 import { ChatPanel, WhatsAppHome } from "../components/chat";
+import SocketContext from "../context/SocketContext";
 
-const Home = () => {
+const Home = ({ socket }) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
   const { activeConversation } = useSelector((state) => state.chat);
+
+  // join user into the socket io
+  useEffect(() => {
+    socket.emit("join", user?._id);
+  }, [user]);
 
   // get conversations
   useEffect(() => {
@@ -32,4 +38,10 @@ const Home = () => {
   );
 };
 
-export default Home;
+const HomeWithSocket = (props) => (
+  <SocketContext.Consumer>
+    {(socket) => <Home {...props} socket={socket} />}
+  </SocketContext.Consumer>
+);
+
+export default HomeWithSocket;

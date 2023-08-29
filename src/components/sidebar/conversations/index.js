@@ -1,4 +1,4 @@
 import Conversations from "./Conversations";
-import Conversation from "./Conversation";
+import ConversationWithSocket from "./Conversation";
 
-export { Conversations, Conversation };
+export { Conversations, ConversationWithSocket as Conversation };
