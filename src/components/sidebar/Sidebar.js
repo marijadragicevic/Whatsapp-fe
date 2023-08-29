@@ -23,7 +23,10 @@ const Sidebar = () => {
         setSearchResults={handleSearchResults}
       />
       {searchResults?.length > 0 ? (
-        <SearchResults searchResults={searchResults} />
+        <SearchResults
+          searchResults={searchResults}
+          setSearchResults={handleSearchResults}
+        />
       ) : (
         <Conversations />
       )}
