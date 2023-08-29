@@ -21,6 +21,7 @@ export const getConversations = createAsyncThunk(
       const { data } = await axios.get(CONVERSATION_ENDPOINT, {
         headers: { Authorization: `Bearer ${token}` },
       });
+
       return data;
     } catch (error) {
       return rejectWithValue(error.response.data.error.message);
@@ -41,6 +42,7 @@ export const openOrCreateConversation = createAsyncThunk(
           headers: { Authorization: `Bearer ${token}` },
         }
       );
+
       return data;
     } catch (error) {
       return rejectWithValue(error.response.data.error.message);
@@ -60,6 +62,28 @@ export const getConversationMessages = createAsyncThunk(
           headers: { Authorization: `Bearer ${token}` },
         }
       );
+
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data.error.message);
+    }
+  }
+);
+
+export const sendMessage = createAsyncThunk(
+  "message/send",
+  async (values, { rejectWithValue }) => {
+    try {
+      const { token, conversationId, message, files } = values;
+
+      const { data } = await axios.post(
+        `${MESSAGE_ENDPOINT}`,
+        { message, conversationId },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
       return data;
     } catch (error) {
       return rejectWithValue(error.response.data.error.message);
@@ -110,6 +134,18 @@ export const chatSlice = createSlice({
         state.messages = action.payload;
       })
       .addCase(getConversationMessages.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
+      .addCase(sendMessage.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(sendMessage.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.error = "";
+        state.messages = [...state.messages, action.payload];
+      })
+      .addCase(sendMessage.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       });

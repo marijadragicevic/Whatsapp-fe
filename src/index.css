@@ -39,7 +39,7 @@
   }
 
   .overflow_scrollbar {
-    height: calc(100vh - 155px);
+    height: calc(100vh - 105px);
     overflow-x: hidden;
     overflow-y: auto;
   }
