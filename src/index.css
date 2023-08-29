@@ -4,7 +4,12 @@
 
 @layer components {
   .container {
-    @apply w-[1700px] h-full;
+    width: calc(100% - 38px);
+    max-width: 1600px;
+  }
+
+  .flex0030 {
+    flex: 0 0 30%;
   }
 
   .btn {
@@ -39,7 +44,7 @@
   }
 
   .overflow_scrollbar {
-    height: calc(100vh - 119px);
+    height: calc(100vh - 155px);
     overflow-x: hidden;
     overflow-y: auto;
   }
