@@ -3,13 +3,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { ClipLoader } from "react-spinners";
 import { SendIcon } from "../../../svg";
 import { sendMessage } from "../../../features/ChatSlice";
-import Attachments from "./Attachments";
 import Input from "./Input";
 import EmojiPickerPanel from "./EmojiPickerPanel";
+import { Attachments } from "./attachments";
 
 const ChatActions = () => {
   const dispatch = useDispatch();
   const [message, setMessage] = useState("");
+  const [showPicker, setShowPicker] = useState(false);
+  const [showAttachments, setShowAttachments] = useState(false);
   const textRef = useRef();
 
   const { user } = useSelector((state) => state.user);
@@ -34,6 +36,7 @@ const ChatActions = () => {
     if (!isMessageEmpty) {
       dispatch(sendMessage(values));
       setMessage("");
+      setShowPicker(false);
     }
   };
 
@@ -47,11 +50,18 @@ const ChatActions = () => {
         {/* Emojis and attachments*/}
         <ul className="flex gap-x-2">
           <EmojiPickerPanel
+            showPicker={showPicker}
+            setShowPicker={setShowPicker}
             textRef={textRef}
             message={message}
             setMessage={changeMessageHandler}
+            setShowAttachments={setShowAttachments}
           />
-          <Attachments />
+          <Attachments
+            showAttachments={showAttachments}
+            setShowAttachments={setShowAttachments}
+            setShowPicker={setShowPicker}
+          />
         </ul>
         {/* Input */}
         <Input
