@@ -153,7 +153,6 @@ export const chatSlice = createSlice({
         );
         newConversations.unshift(conversation);
         state.conversations = newConversations;
-        console.log(newConversations);
       })
       .addCase(sendMessage.rejected, (state, action) => {
         state.status = "failed";

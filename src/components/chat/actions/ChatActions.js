@@ -1,15 +1,16 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ClipLoader } from "react-spinners";
 import { SendIcon } from "../../../svg";
-import Attachments from "./Attachments";
-import EmojiPicker from "./EmojiPicker";
-import Input from "./Input";
 import { sendMessage } from "../../../features/ChatSlice";
+import Attachments from "./Attachments";
+import Input from "./Input";
+import EmojiPickerPanel from "./EmojiPickerPanel";
 
 const ChatActions = () => {
   const dispatch = useDispatch();
   const [message, setMessage] = useState("");
+  const textRef = useRef();
 
   const { user } = useSelector((state) => state.user);
   const { activeConversation, status } = useSelector((state) => state.chat);
@@ -21,8 +22,8 @@ const ChatActions = () => {
     files: [],
   };
 
-  const changeMessageHandler = (event) => {
-    setMessage(event.target.value);
+  const changeMessageHandler = (newMessage) => {
+    setMessage(newMessage);
   };
 
   const sendMessageHandler = (event) => {
@@ -45,11 +46,19 @@ const ChatActions = () => {
       <div className="w-full flex items-center gap-x-2">
         {/* Emojis and attachments*/}
         <ul className="flex gap-x-2">
-          <EmojiPicker />
+          <EmojiPickerPanel
+            textRef={textRef}
+            message={message}
+            setMessage={changeMessageHandler}
+          />
           <Attachments />
         </ul>
         {/* Input */}
-        <Input message={message} onChangeHandler={changeMessageHandler} />
+        <Input
+          textRef={textRef}
+          message={message}
+          setMessage={changeMessageHandler}
+        />
         {/* Send button */}
         <button className="btn" type="submit">
           {status === "loading" ? (
