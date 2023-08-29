@@ -1,7 +1,11 @@
 import { useDispatch, useSelector } from "react-redux";
 import { dateHandler } from "../../../utils/date";
 import { openOrCreateConversation } from "../../../features/ChatSlice";
-import { getConversationId } from "../../../utils/chat";
+import {
+  getConversationId,
+  getConversationName,
+  getConversationPicture,
+} from "../../../utils/chat";
 import { capitalize } from "../../../utils/string";
 import SocketContext from "../../../context/SocketContext";
 
@@ -38,8 +42,8 @@ const Conversation = ({ conversation, socket }) => {
           {/* Conversation user picture */}
           <div className="relative min-w-[50px] max-w-[50px] h-[50px] rounded-full overflow-hidden">
             <img
-              src={conversation?.picture}
-              alt={conversation?.name}
+              src={getConversationPicture(user, conversation?.users)}
+              alt={getConversationName(user, conversation?.users)}
               className="w-full h-full object-cover"
             />
           </div>
@@ -47,7 +51,7 @@ const Conversation = ({ conversation, socket }) => {
           <div className="w-full flex flex-col">
             {/* Conversation name */}
             <h1 className="font-bold flex items-center gap-x-2">
-              {capitalize(conversation?.name)}
+              {capitalize(getConversationName(user, conversation?.users))}
             </h1>
             {/* Conversation message */}
             <div>
@@ -80,10 +84,10 @@ const Conversation = ({ conversation, socket }) => {
   );
 };
 
-const ConversationWithSocket = (props) => (
+const ConversationWithContext = (props) => (
   <SocketContext.Consumer>
     {(socket) => <Conversation {...props} socket={socket} />}
   </SocketContext.Consumer>
 );
 
-export default ConversationWithSocket;
+export default ConversationWithContext;

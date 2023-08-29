@@ -1,8 +1,13 @@
 import { useDispatch, useSelector } from "react-redux";
 import { openOrCreateConversation } from "../../../features/ChatSlice";
 import { capitalize } from "../../../utils/string";
+import SocketContext from "../../../context/SocketContext";
+import {
+  getConversationName,
+  getConversationPicture,
+} from "../../../utils/chat";
 
-const Contact = ({ contact, setSearchResults }) => {
+const Contact = ({ contact, setSearchResults, socket }) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
 
@@ -12,8 +17,9 @@ const Contact = ({ contact, setSearchResults }) => {
   };
 
   const openConversation = async () => {
-    await dispatch(openOrCreateConversation(values));
+    let newConversation = await dispatch(openOrCreateConversation(values));
     setSearchResults([]);
+    socket.emit("join conversation", newConversation?.payload?._id);
   };
 
   return (
@@ -28,8 +34,8 @@ const Contact = ({ contact, setSearchResults }) => {
           {/* Contact user picture */}
           <div className="relative min-w-[50px] max-w-[50px] h-[50px] rounded-full overflow-hidden">
             <img
-              src={contact?.picture}
-              alt={contact?.name}
+              src={getConversationPicture(user, contact?.users)}
+              alt={getConversationName(user, contact?.users)}
               className="w-full h-full object-cover"
             />
           </div>
@@ -37,7 +43,7 @@ const Contact = ({ contact, setSearchResults }) => {
           <div className="w-full flex flex-col">
             {/* Contact name */}
             <h1 className="font-bold flex items-center gap-x-2">
-              {capitalize(contact?.name)}
+              {capitalize(getConversationName(user, contact?.users))}
             </h1>
             {/* Contact message */}
             <div>
@@ -60,4 +66,9 @@ const Contact = ({ contact, setSearchResults }) => {
   );
 };
 
-export default Contact;
+const ContactWithContext = (props) => (
+  <SocketContext.Consumer>
+    {(socket) => <Contact {...props} socket={socket} />}
+  </SocketContext.Consumer>
+);
+export default ContactWithContext;

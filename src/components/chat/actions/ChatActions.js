@@ -6,8 +6,9 @@ import { sendMessage } from "../../../features/ChatSlice";
 import Input from "./Input";
 import EmojiPickerPanel from "./EmojiPickerPanel";
 import { Attachments } from "./attachments";
+import SocketContext from "../../../context/SocketContext";
 
-const ChatActions = () => {
+const ChatActions = ({ socket }) => {
   const textRef = useRef();
   const dispatch = useDispatch();
 
@@ -38,7 +39,8 @@ const ChatActions = () => {
     if (!isMessageEmpty) {
       setMessage("");
       setShowPicker(false);
-      await dispatch(sendMessage(values));
+      let newMessage = await dispatch(sendMessage(values));
+      socket.emit("send message", newMessage?.payload);
     }
     setLoading(false);
   };
@@ -85,4 +87,10 @@ const ChatActions = () => {
   );
 };
 
-export default ChatActions;
+const ChatActionsWithContext = (props) => (
+  <SocketContext.Consumer>
+    {(socket) => <ChatActions {...props} socket={socket} />}
+  </SocketContext.Consumer>
+);
+
+export default ChatActionsWithContext;

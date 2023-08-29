@@ -9,7 +9,7 @@ import { io } from "socket.io-client";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import SocketContext from "./context/SocketContext";
-import HomeWithSocket from "./pages/Home";
+import Home from "./pages/Home";
 
 // Socket io
 const socket = io(process.env.REACT_APP_SERVER_ENDPOINT);
@@ -25,7 +25,7 @@ const App = () => {
           <Routes>
             <Route
               path="/"
-              element={token ? <HomeWithSocket /> : <Navigate to="/login" />}
+              element={token ? <Home /> : <Navigate to="/login" />}
             />
             <Route
               path="/login"
