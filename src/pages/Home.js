@@ -1,6 +1,9 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getConversations } from "../features/ChatSlice";
+import {
+  getConversations,
+  updateMessagesAndConversations,
+} from "../features/ChatSlice";
 import { Sidebar } from "../components/sidebar";
 import { ChatPanel, WhatsAppHome } from "../components/chat";
 import SocketContext from "../context/SocketContext";
@@ -21,6 +24,15 @@ const Home = ({ socket }) => {
       dispatch(getConversations(user.token));
     }
   }, [user]);
+
+  // listening to receiving message
+  useEffect(() => {
+    // this doesnt work properly
+    socket.on("receive message", (message) => {
+      dispatch(updateMessagesAndConversations(message));
+      // console.log("receive message --->", message);
+    });
+  }, []);
 
   return (
     <div className="h-screen dark:bg-dark_bg_1 flex items-center justify-center overflow-hidden">

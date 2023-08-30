@@ -7,7 +7,7 @@ const initialState = {
   status: "",
   error: "",
   user: {
-    id: "",
+    _id: "",
     name: "",
     email: "",
     picture: "",
@@ -54,7 +54,7 @@ export const userSlice = createSlice({
       state.status = "";
       state.error = "";
       state.user = {
-        id: "",
+        _id: "",
         name: "",
         email: "",
         picture: "",

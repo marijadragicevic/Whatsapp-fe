@@ -21,7 +21,6 @@ export const getConversations = createAsyncThunk(
       const { data } = await axios.get(CONVERSATION_ENDPOINT, {
         headers: { Authorization: `Bearer ${token}` },
       });
-
       return data;
     } catch (error) {
       return rejectWithValue(error.response.data.error.message);
@@ -42,7 +41,6 @@ export const openOrCreateConversation = createAsyncThunk(
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-
       return data;
     } catch (error) {
       return rejectWithValue(error.response.data.error.message);
@@ -95,8 +93,26 @@ export const chatSlice = createSlice({
   name: "chat",
   initialState,
   reducers: {
-    setActiveCoversation: (state, action) => {
+    setActiveConversation: (state, action) => {
       state.activeConversation = action.payload;
+    },
+    updateMessagesAndConversations: (state, action) => {
+      //update messages
+      let convoId = state.activeConversation?._id;
+      if (convoId === action.payload._id) {
+        state.messages = [...state.messages, action.payload];
+      }
+
+      // update conversations
+      let conversation = {
+        ...action.payload.conversation,
+        latestMessage: action.payload,
+      };
+      let newConversations = [...state.conversations]?.filter(
+        (convo) => convo._id !== conversation?._id
+      );
+      newConversations.unshift(conversation);
+      state.conversations = newConversations;
     },
   },
   extraReducers(builder) {
@@ -161,6 +177,7 @@ export const chatSlice = createSlice({
   },
 });
 
-export const { setActiveCoversation } = chatSlice.actions;
+export const { setActiveConversation, updateMessagesAndConversations } =
+  chatSlice.actions;
 
 export default chatSlice.reducer;

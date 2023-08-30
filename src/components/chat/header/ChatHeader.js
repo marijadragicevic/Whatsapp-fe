@@ -1,10 +1,33 @@
 import { useSelector } from "react-redux";
 import { DotsIcon, SearchLargeIcon } from "../../../svg";
 import { capitalize } from "../../../utils/string";
+import { useEffect, useState } from "react";
+import {
+  getConversationName,
+  getConversationPicture,
+} from "../../../utils/chat";
 
 const ChatHeader = () => {
+  const { user } = useSelector((state) => state.user);
   const { activeConversation } = useSelector((state) => state.chat);
-  const { name, picture } = activeConversation;
+  const { users } = activeConversation;
+
+  const [userReceiver, setUserReceiver] = useState({
+    name: "",
+    picture: "",
+  });
+
+  const { name, picture } = userReceiver;
+
+  useEffect(() => {
+    const receiverName = getConversationName(user, users);
+    const receiverPicture = getConversationPicture(user, users);
+
+    setUserReceiver({
+      name: receiverName && capitalize(receiverName),
+      picture: receiverPicture,
+    });
+  }, [activeConversation, user]);
 
   return (
     <div className="h-[59px] dark:bg-dark_bg_2 flex items-center p16 select-none overflow-hidden ">

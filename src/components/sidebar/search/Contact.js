@@ -2,10 +2,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { openOrCreateConversation } from "../../../features/ChatSlice";
 import { capitalize } from "../../../utils/string";
 import SocketContext from "../../../context/SocketContext";
-import {
-  getConversationName,
-  getConversationPicture,
-} from "../../../utils/chat";
 
 const Contact = ({ contact, setSearchResults, socket }) => {
   const dispatch = useDispatch();
@@ -34,16 +30,16 @@ const Contact = ({ contact, setSearchResults, socket }) => {
           {/* Contact user picture */}
           <div className="relative min-w-[50px] max-w-[50px] h-[50px] rounded-full overflow-hidden">
             <img
-              src={getConversationPicture(user, contact?.users)}
-              alt={getConversationName(user, contact?.users)}
-              className="w-full h-full object-cover"
+              src={contact.picture}
+              alt={contact.name}
+              className="w-full h-full object-cover "
             />
           </div>
           {/* Contact name and message */}
           <div className="w-full flex flex-col">
             {/* Contact name */}
             <h1 className="font-bold flex items-center gap-x-2">
-              {capitalize(getConversationName(user, contact?.users))}
+              {capitalize(contact?.name)}
             </h1>
             {/* Contact message */}
             <div>
