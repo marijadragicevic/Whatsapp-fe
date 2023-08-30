@@ -9,7 +9,7 @@ import {
 import { capitalize } from "../../../utils/string";
 import SocketContext from "../../../context/SocketContext";
 
-const Conversation = ({ conversation, socket }) => {
+const Conversation = ({ conversation, socket, online }) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
   const { activeConversation } = useSelector((state) => state.chat);
@@ -40,7 +40,11 @@ const Conversation = ({ conversation, socket }) => {
         {/* Left */}
         <div className="flex items-center gap-x-3">
           {/* Conversation user picture */}
-          <div className="relative min-w-[50px] max-w-[50px] h-[50px] rounded-full overflow-hidden">
+          <div
+            className={`relative min-w-[50px] max-w-[50px] h-[50px] rounded-full overflow-hidden ${
+              online ? "online" : ""
+            }`}
+          >
             <img
               src={getConversationPicture(user, conversation?.users)}
               alt={getConversationName(user, conversation?.users)}

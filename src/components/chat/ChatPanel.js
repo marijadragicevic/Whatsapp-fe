@@ -4,8 +4,9 @@ import ChatHeader from "./header/ChatHeader";
 import ChatMessages from "./messages/ChatMessages";
 import { getConversationMessages } from "../../features/ChatSlice";
 import ChatActions from "./actions/ChatActions";
+import { checkOnlineStatus, getConversationId } from "../../utils/chat";
 
-const ChatPanel = () => {
+const ChatPanel = ({ onlineUsers }) => {
   const dispatch = useDispatch();
   const { activeConversation } = useSelector((state) => state.chat);
   const { user } = useSelector((state) => state.user);
@@ -26,7 +27,13 @@ const ChatPanel = () => {
       {/* Container */}
       <div>
         {/* Chat header */}
-        <ChatHeader />
+        <ChatHeader
+          online={checkOnlineStatus(
+            onlineUsers,
+            user,
+            activeConversation?.users
+          )}
+        />
         {/* Chat messages */}
         <ChatMessages />
         {/* Chat actions */}

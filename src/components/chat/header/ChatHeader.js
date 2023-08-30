@@ -7,7 +7,7 @@ import {
   getConversationPicture,
 } from "../../../utils/chat";
 
-const ChatHeader = () => {
+const ChatHeader = ({ online }) => {
   const { user } = useSelector((state) => state.user);
   const { activeConversation } = useSelector((state) => state.chat);
   const { users } = activeConversation;
@@ -48,7 +48,9 @@ const ChatHeader = () => {
             <h1 className="dark:text-white text-md font-bold">
               {capitalize(name)}
             </h1>
-            <span className="text-xs dark:text-dark_svg_1">online</span>
+            <span className="text-xs dark:text-dark_svg_1">
+              {online && "online"}
+            </span>
           </div>
         </div>
         {/* Right */}
