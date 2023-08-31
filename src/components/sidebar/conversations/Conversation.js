@@ -9,7 +9,7 @@ import {
 import { capitalize } from "../../../utils/string";
 import SocketContext from "../../../context/SocketContext";
 
-const Conversation = ({ conversation, socket, online }) => {
+const Conversation = ({ conversation, socket, online, typing }) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
   const { activeConversation } = useSelector((state) => state.chat);
@@ -61,14 +61,18 @@ const Conversation = ({ conversation, socket, online }) => {
             <div>
               <div className="flex items-center gap-x-1 dark:text-dark_text_2">
                 <div className="flex-1 items-center gap-x-1 dark:text-dark_text_2">
-                  <p>
-                    {conversation?.latestMessage?.message?.length > 20
-                      ? `${conversation.latestMessage.message.substring(
-                          0,
-                          20
-                        )}...`
-                      : conversation.latestMessage?.message}
-                  </p>
+                  {typing === conversation?._id ? (
+                    <p className="text-green_1">Typing...</p>
+                  ) : (
+                    <p>
+                      {conversation?.latestMessage?.message?.length > 20
+                        ? `${conversation.latestMessage.message.substring(
+                            0,
+                            20
+                          )}...`
+                        : conversation.latestMessage?.message}
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
