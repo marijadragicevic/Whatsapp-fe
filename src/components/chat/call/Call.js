@@ -3,13 +3,22 @@ import CallActions from "./CallActions";
 import CallArea from "./CallArea";
 import Header from "./Header";
 import Ringing from "./Ringing";
+import ringing from "../../../audio/ringing.mp3";
 
-const Call = ({ call, setCall, callAccepted, userVideo, myVideo, stream }) => {
+const Call = ({
+  call,
+  setCall,
+  callAccepted,
+  userVideo,
+  myVideo,
+  stream,
+  answerCall,
+  show,
+}) => {
   const { receivingCall, callEnded } = call;
 
   const [showActions, setShowActions] = useState(true);
-
-  console.log(call);
+  const [toggle, setToggle] = useState(false);
 
   return (
     <>
@@ -33,34 +42,42 @@ const Call = ({ call, setCall, callAccepted, userVideo, myVideo, stream }) => {
           {/* Video streams */}
           <div>
             {/* User video */}
-            <div>
-              <video
-                ref={userVideo}
-                playsInline
-                muted
-                autoPlay
-                className="largeVideoCall"
-              ></video>
-            </div>
+            {callAccepted && !callEnded && (
+              <div>
+                <video
+                  ref={userVideo}
+                  playsInline
+                  muted
+                  autoPlay
+                  className={toggle ? "smallVideoCall" : "largeVideoCall"}
+                  onClick={() => setToggle((prevState) => !prevState)}
+                ></video>
+              </div>
+            )}
             {/* My video */}
-            <div>
-              <video
-                ref={myVideo}
-                playsInline
-                muted
-                autoPlay
-                className={`smallVideoCall ${
-                  showActions ? "moveVideoCall" : ""
-                }`}
-              ></video>
-            </div>
+            {stream && (
+              <div>
+                <video
+                  ref={myVideo}
+                  playsInline
+                  muted
+                  autoPlay
+                  className={`${toggle ? "largeVideoCall" : "smallVideoCall"} ${
+                    showActions ? "moveVideoCall" : ""
+                  }`}
+                  onClick={() => setToggle((prevState) => !prevState)}
+                ></video>
+              </div>
+            )}
           </div>
         </div>
       </div>
       {/* Ringing */}
       {receivingCall && !callAccepted && (
-        <Ringing call={call} setCall={setCall} />
+        <Ringing call={call} setCall={setCall} answerCall={answerCall} />
       )}
+      {/* Calling ringtone */}
+      {!callAccepted && show && <audio src={ringing} autoPlay loop></audio>}
     </>
   );
 };

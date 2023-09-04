@@ -28,12 +28,14 @@ const Home = ({ socket }) => {
   const { user } = useSelector((state) => state.user);
   const { activeConversation } = useSelector((state) => state.chat);
   // call
+  const [show, setShow] = useState(false);
   const [call, setCall] = useState(callData);
   const [stream, setStream] = useState();
   const { receivingCall, callEnded, socketId } = call;
   const [callAccepted, setCallAccepted] = useState(false);
   const myVideo = useRef();
   const userVideo = useRef();
+  const connectionRef = useRef();
   // typing
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [typing, setTyping] = useState(false);
@@ -46,6 +48,11 @@ const Home = ({ socket }) => {
     setStream(stream);
   };
 
+  const enableMedia = useCallback(() => {
+    myVideo.current.srcObject = stream;
+    setShow(true);
+  }, [stream]);
+
   // call user function
   const callUser = useCallback(() => {
     enableMedia();
@@ -54,11 +61,13 @@ const Home = ({ socket }) => {
       name: getConversationName(user, activeConversation.users),
       picture: getConversationPicture(user, activeConversation.users),
     });
+
     const peer = new Peer({
       initiator: true,
       trickle: false,
       stream: stream,
     });
+
     peer.on("signal", (data) => {
       socket.emit("call user", {
         userToCall: getConversationId(user, activeConversation?.users),
@@ -68,11 +77,37 @@ const Home = ({ socket }) => {
         picture: user.picture,
       });
     });
+
+    peer.on("stream", (stream) => {
+      userVideo.current.srcObject = stream;
+    });
+
+    socket.on("call accepted", (signal) => {
+      setCallAccepted(true);
+      peer.signal(signal);
+    });
+
+    connectionRef.current = peer;
   }, [stream, activeConversation, user]);
 
-  const enableMedia = useCallback(() => {
-    myVideo.current.srcObject = stream;
-  }, [stream]);
+  // answer call function
+  const answerCall = () => {
+    enableMedia();
+    setCallAccepted(true);
+    const peer = new Peer({
+      initiator: false,
+      trickle: false,
+      stream: stream,
+    });
+    peer.on("signal", (data) => {
+      socket.emit("answer call", { signal: data, to: call.socketId });
+    });
+    peer.on("stream", (stream) => {
+      userVideo.current.srcObject = stream;
+    });
+    peer.signal(call.signal);
+    connectionRef.current = peer;
+  };
 
   // call
   useEffect(() => {
@@ -141,7 +176,7 @@ const Home = ({ socket }) => {
         </div>
       </div>
       {/* Call */}
-      <div className={call.signal && !call.callEnded ? "" : "hidden"}>
+      <div className={show || (call.signal && !call.callEnded) ? "" : "hidden"}>
         <Call
           call={call}
           setCall={setCall}
@@ -149,6 +184,8 @@ const Home = ({ socket }) => {
           userVideo={userVideo}
           myVideo={myVideo}
           stream={stream}
+          answerCall={answerCall}
+          show={show}
         />
       </div>
     </>
