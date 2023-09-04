@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { CloseIcon, ValidIcon } from "../../../svg";
 import ringtone from "../../../audio/ringtone.mp3";
+import { capitalize } from "../../../utils/string";
 
 const Ringing = ({ call, setCall }) => {
-  const { receivingCall, callEnded } = call;
+  const { receivingCall, callEnded, name, picture } = call;
 
   const [timer, setTimer] = useState(0);
   let interval;
@@ -31,13 +32,13 @@ const Ringing = ({ call, setCall }) => {
         {/* Call infos */}
         <div className="flex items-center gap-x-2">
           <img
-            alt={`caller profile picture`}
-            src="https://avatars.mds.yandex.net/i?id=e67c20f98bdc512c5d3bc20c140f8fac-5719595-images-taas-consumers&n=27&h=480&w=480"
+            alt={`${name} profile picture`}
+            src={picture}
             className="h-28 w-28 rounded-full"
           />
           <div>
             <h1 className="dark:text-white">
-              <b>Name</b>
+              <b>{capitalize(name)}</b>
               <span className="dark:text-dark_text_2">WhatsApp video...</span>
             </h1>
           </div>

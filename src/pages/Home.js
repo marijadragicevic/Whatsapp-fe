@@ -93,8 +93,6 @@ const Home = ({ socket }) => {
     });
   }, []);
 
-  console.log(socketId);
-
   // join user into the socket io
   useEffect(() => {
     socket.emit("join", user?._id);
@@ -143,14 +141,16 @@ const Home = ({ socket }) => {
         </div>
       </div>
       {/* Call */}
-      <Call
-        call={call}
-        setCall={setCall}
-        callAccepted={callAccepted}
-        userVideo={userVideo}
-        myVideo={myVideo}
-        stream={stream}
-      />
+      <div className={call.signal && !call.callEnded ? "" : "hidden"}>
+        <Call
+          call={call}
+          setCall={setCall}
+          callAccepted={callAccepted}
+          userVideo={userVideo}
+          myVideo={myVideo}
+          stream={stream}
+        />
+      </div>
     </>
   );
 };

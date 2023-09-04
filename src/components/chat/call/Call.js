@@ -4,48 +4,56 @@ import CallArea from "./CallArea";
 import Header from "./Header";
 import Ringing from "./Ringing";
 
-const Call = ({ call, setCall, callAccepted, userVideo, myVideo }) => {
+const Call = ({ call, setCall, callAccepted, userVideo, myVideo, stream }) => {
   const { receivingCall, callEnded } = call;
 
   const [showActions, setShowActions] = useState(true);
 
+  console.log(call);
+
   return (
-    <div
-      className={`fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[550px] z-10 rounded-2xl overflow-hidden callbg`}
-      onMouseOver={() => setShowActions(true)}
-      onMouseOut={() => setShowActions(false)}
-    >
-      {/* Container */}
-      <div>
+    <>
+      <div
+        className={`fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[550px] z-10 rounded-2xl overflow-hidden callbg
+         ${receivingCall && !callAccepted ? "hidden" : ""}
+         `}
+        onMouseOver={() => setShowActions(true)}
+        onMouseOut={() => setShowActions(false)}
+      >
+        {/* Container */}
         <div>
-          {/* Header */}
-          <Header />
-          {/* Call area */}
-          <CallArea name="name" />
-          {/* Call actions */}
-          {showActions && <CallActions />}
-        </div>
-        {/* Video streams */}
-        <div>
-          {/* User video */}
           <div>
-            <video
-              ref={userVideo}
-              playsInline
-              muted
-              autoPlay
-              className="largeVideoCall"
-            ></video>
+            {/* Header */}
+            <Header />
+            {/* Call area */}
+            <CallArea name={call.name} />
+            {/* Call actions */}
+            {showActions && <CallActions />}
           </div>
-          {/* My video */}
+          {/* Video streams */}
           <div>
-            <video
-              ref={myVideo}
-              playsInline
-              muted
-              autoPlay
-              className={`smallVideoCall ${showActions ? "moveVideoCall" : ""}`}
-            ></video>
+            {/* User video */}
+            <div>
+              <video
+                ref={userVideo}
+                playsInline
+                muted
+                autoPlay
+                className="largeVideoCall"
+              ></video>
+            </div>
+            {/* My video */}
+            <div>
+              <video
+                ref={myVideo}
+                playsInline
+                muted
+                autoPlay
+                className={`smallVideoCall ${
+                  showActions ? "moveVideoCall" : ""
+                }`}
+              ></video>
+            </div>
           </div>
         </div>
       </div>
@@ -53,7 +61,7 @@ const Call = ({ call, setCall, callAccepted, userVideo, myVideo }) => {
       {receivingCall && !callAccepted && (
         <Ringing call={call} setCall={setCall} />
       )}
-    </div>
+    </>
   );
 };
 
