@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getConversations,
@@ -10,6 +10,7 @@ import SocketContext from "../context/SocketContext";
 import Call from "../components/chat/call/Call";
 
 const callData = {
+  socketId: "",
   receivingCall: false,
   callEnded: false,
 };
@@ -20,11 +21,33 @@ const Home = ({ socket }) => {
   const { activeConversation } = useSelector((state) => state.chat);
   // call
   const [call, setCall] = useState(callData);
-  const { receivingCall, callEnded } = call;
+  const [stream, setStream] = useState();
+  const { receivingCall, callEnded, socketId } = call;
   const [callAccepted, setCallAccepted] = useState(false);
+  const myVideo = useRef();
+  const userVideo = useRef();
   // typing
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [typing, setTyping] = useState(false);
+
+  const setupMedia = async () => {
+    const stream = await navigator?.mediaDevices.getUserMedia({
+      video: true,
+      audio: true,
+    });
+
+    setStream(stream);
+  };
+
+  // call
+  useEffect(() => {
+    setupMedia();
+    socket.on("setup socket", (id) => {
+      setCall({ ...call, socketId: id });
+    });
+  }, []);
+
+  console.log(socketId);
 
   // join user into the socket io
   useEffect(() => {
@@ -70,7 +93,14 @@ const Home = ({ socket }) => {
         </div>
       </div>
       {/* Call */}
-      <Call call={call} setCall={setCall} callAccepted={callAccepted} />
+      <Call
+        call={call}
+        setCall={setCall}
+        callAccepted={callAccepted}
+        userVideo={userVideo}
+        myVideo={myVideo}
+        stream={stream}
+      />
     </>
   );
 };

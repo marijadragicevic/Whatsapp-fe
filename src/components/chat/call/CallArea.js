@@ -2,7 +2,7 @@ import { capitalize } from "../../../utils/string";
 
 const CallArea = ({ name }) => {
   return (
-    <div className="absolute top-12 w-full p-1">
+    <div className="absolute top-12 w-full p-1 z-40">
       {/* Container */}
       <div className="flex flex-col items-center">
         {/* Call infos */}
