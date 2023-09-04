@@ -7,12 +7,22 @@ import {
 import { Sidebar } from "../components/sidebar";
 import { ChatPanel, WhatsAppHome } from "../components/chat";
 import SocketContext from "../context/SocketContext";
+import Call from "../components/chat/call/Call";
+
+const callData = {
+  receivingCall: false,
+  callEnded: false,
+};
 
 const Home = ({ socket }) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
   const { activeConversation } = useSelector((state) => state.chat);
-
+  // call
+  const [call, setCall] = useState(callData);
+  const { receivingCall, callEnded } = call;
+  const [callAccepted, setCallAccepted] = useState(false);
+  // typing
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [typing, setTyping] = useState(false);
 
@@ -46,18 +56,22 @@ const Home = ({ socket }) => {
   }, []);
 
   return (
-    <div className="h-screen dark:bg-dark_bg_1 flex items-center justify-center overflow-hidden">
-      {/* Container */}
-      <div className="container h-screen flex py-[19px]">
-        {/* Sidebar */}
-        <Sidebar onlineUsers={onlineUsers} typing={typing} />
-        {activeConversation && Object.keys(activeConversation)?.length > 0 ? (
-          <ChatPanel onlineUsers={onlineUsers} typing={typing} />
-        ) : (
-          <WhatsAppHome />
-        )}
+    <>
+      <div className="h-screen dark:bg-dark_bg_1 flex items-center justify-center overflow-hidden">
+        {/* Container */}
+        <div className="container h-screen flex py-[19px]">
+          {/* Sidebar */}
+          <Sidebar onlineUsers={onlineUsers} typing={typing} />
+          {activeConversation && Object.keys(activeConversation)?.length > 0 ? (
+            <ChatPanel onlineUsers={onlineUsers} typing={typing} />
+          ) : (
+            <WhatsAppHome />
+          )}
+        </div>
       </div>
-    </div>
+      {/* Call */}
+      <Call call={call} setCall={setCall} callAccepted={callAccepted} />
+    </>
   );
 };
 

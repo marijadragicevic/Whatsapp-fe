@@ -52,6 +52,12 @@
   .online {
     border: 3px solid #00a884;
   }
+  .callbg {
+    background-image: linear-gradient(black, black),
+      url("https://res.cloudinary.com/dmhcnhtng/image/upload/v1677358270/Untitled-1_copy_rpx8yb.jpg");
+    background-size: cover;
+    background-blend-mode: saturation;
+  }
 }
 
 /* --------- Animations ----------- */
