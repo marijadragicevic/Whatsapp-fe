@@ -6,7 +6,7 @@ import { getConversationMessages } from "../../features/ChatSlice";
 import ChatActions from "./actions/ChatActions";
 import { checkOnlineStatus, getConversationId } from "../../utils/chat";
 
-const ChatPanel = ({ onlineUsers, typing }) => {
+const ChatPanel = ({ onlineUsers, typing, callUser }) => {
   const dispatch = useDispatch();
   const { activeConversation } = useSelector((state) => state.chat);
   const { user } = useSelector((state) => state.user);
@@ -33,6 +33,7 @@ const ChatPanel = ({ onlineUsers, typing }) => {
             user,
             activeConversation?.users
           )}
+          callUser={callUser}
         />
         {/* Chat messages */}
         <ChatMessages typing={typing} />

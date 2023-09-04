@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import Peer from "simple-peer";
 import {
   getConversations,
   updateMessagesAndConversations,
@@ -8,11 +9,18 @@ import { Sidebar } from "../components/sidebar";
 import { ChatPanel, WhatsAppHome } from "../components/chat";
 import SocketContext from "../context/SocketContext";
 import Call from "../components/chat/call/Call";
+import {
+  getConversationId,
+  getConversationName,
+  getConversationPicture,
+} from "../utils/chat";
 
 const callData = {
   socketId: "",
   receivingCall: false,
   callEnded: false,
+  name: "",
+  picture: "",
 };
 
 const Home = ({ socket }) => {
@@ -35,15 +43,53 @@ const Home = ({ socket }) => {
       video: true,
       audio: true,
     });
-
     setStream(stream);
   };
+
+  // call user function
+  const callUser = useCallback(() => {
+    enableMedia();
+    setCall({
+      ...call,
+      name: getConversationName(user, activeConversation.users),
+      picture: getConversationPicture(user, activeConversation.users),
+    });
+    const peer = new Peer({
+      initiator: true,
+      trickle: false,
+      stream: stream,
+    });
+    peer.on("signal", (data) => {
+      socket.emit("call user", {
+        userToCall: getConversationId(user, activeConversation?.users),
+        signal: data,
+        from: socketId,
+        name: user.name,
+        picture: user.picture,
+      });
+    });
+  }, [stream, activeConversation, user]);
+
+  const enableMedia = useCallback(() => {
+    myVideo.current.srcObject = stream;
+  }, [stream]);
 
   // call
   useEffect(() => {
     setupMedia();
     socket.on("setup socket", (id) => {
       setCall({ ...call, socketId: id });
+    });
+
+    socket.on("call user", (data) => {
+      setCall({
+        ...call,
+        socketId: data.from,
+        name: data.name,
+        picture: data.picture,
+        signal: data.signal,
+        receivingCall: true,
+      });
     });
   }, []);
 
@@ -86,7 +132,11 @@ const Home = ({ socket }) => {
           {/* Sidebar */}
           <Sidebar onlineUsers={onlineUsers} typing={typing} />
           {activeConversation && Object.keys(activeConversation)?.length > 0 ? (
-            <ChatPanel onlineUsers={onlineUsers} typing={typing} />
+            <ChatPanel
+              onlineUsers={onlineUsers}
+              typing={typing}
+              callUser={callUser}
+            />
           ) : (
             <WhatsAppHome />
           )}
