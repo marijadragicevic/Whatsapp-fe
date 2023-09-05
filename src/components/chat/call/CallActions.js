@@ -7,7 +7,7 @@ import {
   VideoDialIcon,
 } from "../../../svg";
 
-const CallActions = ({}) => {
+const CallActions = ({ endCall }) => {
   return (
     <div className="h-22 w-full absolute bottom-0 z-40 px-1">
       {/* Container */}
@@ -36,7 +36,7 @@ const CallActions = ({}) => {
               <MuteIcon className="fill-white w-5" />
             </button>
           </li>
-          <li>
+          <li onClick={endCall}>
             <button className="btn_secondary bg-red-600 rotate-[135deg]">
               <DialIcon className="fill-white w-6" />
             </button>

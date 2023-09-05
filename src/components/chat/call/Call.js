@@ -14,6 +14,9 @@ const Call = ({
   stream,
   answerCall,
   show,
+  endCall,
+  totalSecInCall,
+  setTotalSecInCall,
 }) => {
   const { receivingCall, callEnded } = call;
 
@@ -35,9 +38,13 @@ const Call = ({
             {/* Header */}
             <Header />
             {/* Call area */}
-            <CallArea name={call.name} />
+            <CallArea
+              name={call.name}
+              totalSecInCall={totalSecInCall}
+              setTotalSecInCall={setTotalSecInCall}
+            />
             {/* Call actions */}
-            {showActions && <CallActions />}
+            {showActions && <CallActions endCall={endCall} />}
           </div>
           {/* Video streams */}
           <div>
@@ -74,7 +81,12 @@ const Call = ({
       </div>
       {/* Ringing */}
       {receivingCall && !callAccepted && (
-        <Ringing call={call} setCall={setCall} answerCall={answerCall} />
+        <Ringing
+          call={call}
+          setCall={setCall}
+          endCall={endCall}
+          answerCall={answerCall}
+        />
       )}
       {/* Calling ringtone */}
       {!callAccepted && show && <audio src={ringing} autoPlay loop></audio>}

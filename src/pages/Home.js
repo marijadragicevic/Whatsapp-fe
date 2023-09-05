@@ -33,6 +33,7 @@ const Home = ({ socket }) => {
   const [stream, setStream] = useState();
   const { receivingCall, callEnded, socketId } = call;
   const [callAccepted, setCallAccepted] = useState(false);
+  const [totalSecInCall, setTotalSecInCall] = useState(0);
   const myVideo = useRef();
   const userVideo = useRef();
   const connectionRef = useRef();
@@ -109,6 +110,15 @@ const Home = ({ socket }) => {
     connectionRef.current = peer;
   };
 
+  // end call
+  const endCall = () => {
+    setShow(false);
+    setCall({ ...call, callEnded: true, receiveingCall: false });
+    myVideo.current.srcObject = null;
+    socket.emit("end call", call.socketId);
+    connectionRef?.current?.destroy();
+  };
+
   // call
   useEffect(() => {
     setupMedia();
@@ -125,6 +135,15 @@ const Home = ({ socket }) => {
         signal: data.signal,
         receivingCall: true,
       });
+    });
+
+    socket.on("end call", () => {
+      setShow(false);
+      setCall({ ...call, callEnded: true, receiveingCall: false });
+      myVideo.current.srcObject = null;
+      if (callAccepted) {
+        connectionRef?.current?.destroy();
+      }
     });
   }, []);
 
@@ -184,8 +203,11 @@ const Home = ({ socket }) => {
           userVideo={userVideo}
           myVideo={myVideo}
           stream={stream}
-          answerCall={answerCall}
           show={show}
+          answerCall={answerCall}
+          endCall={endCall}
+          totalSecInCall={totalSecInCall}
+          setTotalSecInCall={setTotalSecInCall}
         />
       </div>
     </>

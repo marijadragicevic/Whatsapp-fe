@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { CloseIcon, ValidIcon } from "../../../svg";
 import ringtone from "../../../audio/ringtone.mp3";
 
-const Ringing = ({ call, setCall, answerCall }) => {
+const Ringing = ({ call, setCall, answerCall, endCall }) => {
   const { receivingCall, callEnded, name, picture } = call;
 
   const [timer, setTimer] = useState(0);
@@ -44,7 +44,7 @@ const Ringing = ({ call, setCall, answerCall }) => {
         </div>
         {/*  Call actions*/}
         <ul className="flex items-center gap-x-2">
-          <li>
+          <li onClick={endCall}>
             <button
               className="w-8 h-8 flex items-center justify-center rounded-full bg-red-500"
               type="button"
