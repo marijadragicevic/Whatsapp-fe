@@ -113,7 +113,7 @@ const Home = ({ socket }) => {
   // end call
   const endCall = () => {
     setShow(false);
-    setCall({ ...call, callEnded: true, receiveingCall: false });
+    setCall({ ...call, callEnded: true, receivingCall: false });
     myVideo.current.srcObject = null;
     socket.emit("end call", call.socketId);
     connectionRef?.current?.destroy();
@@ -125,7 +125,6 @@ const Home = ({ socket }) => {
     socket.on("setup socket", (id) => {
       setCall({ ...call, socketId: id });
     });
-
     socket.on("call user", (data) => {
       setCall({
         ...call,
@@ -136,10 +135,9 @@ const Home = ({ socket }) => {
         receivingCall: true,
       });
     });
-
     socket.on("end call", () => {
       setShow(false);
-      setCall({ ...call, callEnded: true, receiveingCall: false });
+      setCall({ ...call, callEnded: true, receivingCall: false });
       myVideo.current.srcObject = null;
       if (callAccepted) {
         connectionRef?.current?.destroy();
