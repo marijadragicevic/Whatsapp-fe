@@ -13,7 +13,6 @@ const Input = ({ message, setMessage, textRef, socket }) => {
     setMessage(event.target.value);
     if (!typing) {
       setTyping(true);
-      console.log();
       socket.emit("typing", activeConversation?._id);
     }
     setLastTypingTime(new Date().getTime());
